@@ -12,6 +12,7 @@
 	import InfoIcon from '@lucide/svelte/icons/info';
 	import CopyablePre from '$lib/components/copyable/CopyablePre.svelte';
 	import {
+		AssemblyAiApiKeyInput,
 		CompressionBody,
 		DeepgramApiKeyInput,
 		ElevenLabsApiKeyInput,
@@ -241,6 +242,13 @@
 				</Field.Description>
 			</Field.Field>
 			<MistralApiKeyInput />
+		{:else if settings.get('transcription.service') === 'AssemblyAI'}
+			<Field.Description>
+				AssemblyAI streams partial + final transcripts over WebSocket as you
+				speak. No model, language, or prompt selection — the universal
+				streaming endpoint handles everything.
+			</Field.Description>
+			<AssemblyAiApiKeyInput />
 		{:else if settings.get('transcription.service') === 'ElevenLabs'}
 			<Field.Field>
 				<Field.Label for="elevenlabs-model">ElevenLabs Model</Field.Label>

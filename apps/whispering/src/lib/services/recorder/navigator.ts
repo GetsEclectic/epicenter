@@ -28,6 +28,14 @@ type ActiveRecording = {
 let activeRecording: ActiveRecording | null = null;
 
 /**
+ * Expose the currently-active MediaStream for parallel consumers
+ * (e.g. AssemblyAI realtime streaming). Returns null if nothing is recording.
+ */
+export function getActiveNavigatorStream(): MediaStream | null {
+	return activeRecording?.stream ?? null;
+}
+
+/**
  * Navigator recorder service that uses the MediaRecorder API.
  * Available in both browser and desktop environments.
  */

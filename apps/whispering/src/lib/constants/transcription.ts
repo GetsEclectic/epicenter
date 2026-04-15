@@ -138,6 +138,24 @@ export const TRANSCRIPTION = {
 			supportsLanguage: true,
 		},
 	},
+	AssemblyAI: {
+		label: 'AssemblyAI',
+		location: 'cloud',
+		defaultModel: 'universal-streaming',
+		models: [
+			{
+				name: 'universal-streaming',
+				description:
+					"AssemblyAI's realtime streaming transcription. WebSocket-based, sub-second latency, partial + final transcripts as you speak.",
+				cost: '$0.15/hour',
+			},
+		],
+		capabilities: {
+			supportsPrompt: false,
+			supportsTemperature: false,
+			supportsLanguage: false,
+		},
+	},
 	Mistral: {
 		label: 'Mistral AI',
 		location: 'cloud',

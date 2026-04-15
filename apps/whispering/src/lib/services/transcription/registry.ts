@@ -150,6 +150,18 @@ export const TRANSCRIPTION_SERVICES = [
 		location: 'cloud',
 	},
 	{
+		id: 'AssemblyAI',
+		name: 'AssemblyAI',
+		icon: elevenlabsIcon,
+		invertInDarkMode: false,
+		description: 'Realtime streaming transcription (WebSocket)',
+		models: TRANSCRIPTION.AssemblyAI.models,
+		defaultModel: TRANSCRIPTION.AssemblyAI.defaultModel,
+		modelSettingKey: 'transcription.assemblyai.model',
+		apiKeyField: 'apiKeys.assemblyai',
+		location: 'cloud',
+	},
+	{
 		id: 'Mistral',
 		name: 'Mistral AI',
 		icon: mistralIcon,

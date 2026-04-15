@@ -1,6 +1,7 @@
 // Direct imports and re-exports from organized services
 
 // Cloud transcription services
+import { AssemblyAIStreamingServiceLive } from './cloud/assemblyai';
 import { DeepgramTranscriptionServiceLive } from './cloud/deepgram';
 import { ElevenlabsTranscriptionServiceLive } from './cloud/elevenlabs';
 import { GroqTranscriptionServiceLive } from './cloud/groq';
@@ -15,6 +16,7 @@ import { WhisperCppTranscriptionServiceLive } from './local/whispercpp';
 import { SpeachesTranscriptionServiceLive } from './self-hosted/speaches';
 
 export {
+	AssemblyAIStreamingServiceLive as assemblyai,
 	DeepgramTranscriptionServiceLive as deepgram,
 	ElevenlabsTranscriptionServiceLive as elevenlabs,
 	GroqTranscriptionServiceLive as groq,

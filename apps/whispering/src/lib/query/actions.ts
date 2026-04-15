@@ -5,7 +5,9 @@ import { defineMutation } from '$lib/query/client';
 import { WhisperingErr } from '$lib/result';
 import { services } from '$lib/services';
 import { DbError } from '$lib/services/db';
+import { getActiveNavigatorStream } from '$lib/services/recorder/navigator';
 import { deviceConfig } from '$lib/state/device-config.svelte';
+import { partialTranscript } from '$lib/state/partial-transcript.svelte';
 import { recordings } from '$lib/state/recordings.svelte';
 import { settings } from '$lib/state/settings.svelte';
 import { transformations } from '$lib/state/transformations.svelte';
@@ -127,6 +129,38 @@ const startManualRecording = defineMutation({
 		manualRecordingStartTime = Date.now();
 		console.info('Recording started');
 		sound.playSoundIfEnabled('manual-start');
+
+		// If AssemblyAI streaming is selected, open the WebSocket session and pipe
+		// the navigator MediaStream into it for live partial transcripts.
+		if (settings.get('transcription.service') === 'AssemblyAI') {
+			const apiKey = deviceConfig.get('apiKeys.assemblyai');
+			const stream = getActiveNavigatorStream();
+			if (!apiKey) {
+				notify.warning({
+					title: '⚠️ AssemblyAI key missing',
+					description:
+						'Add your AssemblyAI API key in settings to enable live transcripts.',
+				});
+			} else if (!stream) {
+				notify.warning({
+					title: '⚠️ Streaming requires navigator recorder',
+					description:
+						'AssemblyAI streaming needs the navigator recording method. Change it in Settings → Recording.',
+				});
+			} else {
+				partialTranscript.clear();
+				const { error: streamStartError } =
+					await services.transcriptions.assemblyai.startSession({
+						apiKey,
+						mediaStream: stream,
+						onPartial: (text) => partialTranscript.set(text),
+					});
+				if (streamStartError) {
+					notify.warning({ ...streamStartError });
+				}
+			}
+		}
+
 		return Ok(undefined);
 	},
 });
@@ -369,6 +403,12 @@ export const actions = {
 				title: '⏸️ Canceling recording...',
 				description: 'Cleaning up recording session...',
 			});
+
+			if (services.transcriptions.assemblyai.hasActiveSession()) {
+				await services.transcriptions.assemblyai.cancelSession();
+			}
+			partialTranscript.clear();
+
 			const { data: cancelRecordingResult, error: cancelRecordingError } =
 				await recorder.cancelRecording({ toastId });
 

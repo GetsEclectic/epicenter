@@ -36,6 +36,7 @@ export function isTranscriptionServiceConfigured(
 				ElevenLabs: 'apiKeys.elevenlabs',
 				Deepgram: 'apiKeys.deepgram',
 				Mistral: 'apiKeys.mistral',
+				AssemblyAI: 'apiKeys.assemblyai',
 			} as const;
 
 			return deviceConfig.get(apiKeyByService[service.id]) !== '';

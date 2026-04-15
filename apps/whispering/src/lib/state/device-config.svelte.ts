@@ -32,6 +32,7 @@ const DEVICE_DEFINITIONS = {
 	'apiKeys.deepgram': defineEntry(type('string'), ''),
 	'apiKeys.elevenlabs': defineEntry(type('string'), ''),
 	'apiKeys.mistral': defineEntry(type('string'), ''),
+	'apiKeys.assemblyai': defineEntry(type('string'), ''),
 	'apiKeys.openrouter': defineEntry(type('string'), ''),
 	'apiKeys.custom': defineEntry(type('string'), ''),
 

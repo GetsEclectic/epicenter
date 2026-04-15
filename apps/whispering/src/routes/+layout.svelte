@@ -4,6 +4,7 @@
 	import { SvelteQueryDevtools } from '@tanstack/svelte-query-devtools';
 	import { ModeWatcher } from 'mode-watcher';
 	import { onNavigate } from '$app/navigation';
+	import PartialTranscriptOverlay from '$lib/components/PartialTranscriptOverlay.svelte';
 	import { queryClient } from '$lib/query/client';
 	import '@epicenter/ui/app.css';
 	import * as Tooltip from '@epicenter/ui/tooltip';
@@ -44,6 +45,7 @@
 		},
 	}}
 />
+<PartialTranscriptOverlay />
 <ModeWatcher defaultMode="dark" track={false} />
 <SvelteQueryDevtools client={queryClient} buttonPosition="bottom-right" />
 

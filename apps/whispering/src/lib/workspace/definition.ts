@@ -247,6 +247,10 @@ const transcription = {
 		type('string'),
 		TRANSCRIPTION.Mistral.defaultModel,
 	),
+	'transcription.assemblyai.model': defineKv(
+		type('string'),
+		TRANSCRIPTION.AssemblyAI.defaultModel,
+	),
 	'transcription.language': defineKv(type('string'), 'auto'),
 	'transcription.prompt': defineKv(type('string'), ''),
 	'transcription.temperature': defineKv(type('0 <= number <= 1'), 0),

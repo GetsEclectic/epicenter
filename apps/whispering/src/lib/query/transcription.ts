@@ -9,6 +9,7 @@ import { WhisperingErr, type WhisperingError } from '$lib/result';
 import { services } from '$lib/services';
 import { desktopServices } from '$lib/services/desktop';
 import { deviceConfig } from '$lib/state/device-config.svelte';
+import { partialTranscript } from '$lib/state/partial-transcript.svelte';
 import type { Recording } from '$lib/state/recordings.svelte';
 import { recordings } from '$lib/state/recordings.svelte';
 import { settings } from '$lib/state/settings.svelte';
@@ -164,6 +165,23 @@ export async function transcribeBlob(
 			const temperature = String(settings.get('transcription.temperature'));
 
 			switch (selectedService) {
+				case 'AssemblyAI': {
+					// Streaming path: the transcript was produced live during recording.
+					// Finalize flushes any pending transcripts from the WebSocket and
+					// returns the accumulated text. The blob is still saved upstream.
+					if (!services.transcriptions.assemblyai.hasActiveSession()) {
+						return WhisperingErr({
+							title: '⚠️ No AssemblyAI streaming session',
+							description:
+								'Streaming session was not active when transcription started.',
+						});
+					}
+					const { data: finalText, error: finalizeError } =
+						await services.transcriptions.assemblyai.finalizeSession();
+					partialTranscript.clear();
+					if (finalizeError) return Err(finalizeError);
+					return Ok(finalText);
+				}
 				case 'OpenAI':
 					return await services.transcriptions.openai.transcribe(
 						audioToTranscribe,

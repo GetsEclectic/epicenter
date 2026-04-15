@@ -9,6 +9,7 @@ import { desktopServices } from '$lib/services/desktop';
 import type { DeviceIdentifier } from '$lib/services/types';
 import { asDeviceIdentifier } from '$lib/services/types';
 import { deviceConfig } from '$lib/state/device-config.svelte';
+import { settings } from '$lib/state/settings.svelte';
 import { notify } from './notify';
 
 const recorderKeys = {
@@ -119,7 +120,8 @@ export const recorder = {
 
 			const params =
 				paramsMap[
-					!window.__TAURI_INTERNALS__
+					!window.__TAURI_INTERNALS__ ||
+					settings.get('transcription.service') === 'AssemblyAI'
 						? 'navigator'
 						: deviceConfig.get('recording.method')
 				];
@@ -207,6 +209,12 @@ export const recorder = {
 export function recorderService() {
 	// In browser, always use navigator recorder
 	if (!window.__TAURI_INTERNALS__) return services.navigatorRecorder;
+
+	// AssemblyAI streaming needs a MediaStream, which only the navigator
+	// recorder exposes — override the user's recording method in that case.
+	if (settings.get('transcription.service') === 'AssemblyAI') {
+		return services.navigatorRecorder;
+	}
 
 	const recorderMap = {
 		navigator: services.navigatorRecorder,
